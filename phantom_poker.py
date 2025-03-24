@@ -3,6 +3,7 @@ import random
 import phantom_poker_multipliers as multipliers
 
 #General variables
+played = False
 deck = decks.standard_deck
 hand_size = 8
 hand = []
@@ -11,9 +12,11 @@ selected_cards = []
 played_hand = []
 value = 0
 multiplier = 1
-ranks = [
-    "1","2","3","4","5","6","7","8","9","10","A","K","Q","J"
-]
+rank_counts = {
+        "A": 0, "K": 0, "Q": 0, "J": 0,
+        "10": 0, "9": 0, "8": 0, "7": 0, "6": 0,
+        "5": 0, "4": 0, "3": 0, "2": 0
+    }
 
 A = 0
 K = 0
@@ -21,11 +24,10 @@ Q = 0
 J = 0
 
 def draw_hand():
-    for i in range (len(hand),hand_size):
+    while len(hand) < hand_size:
         card = random.choice(list(deck))
-        if card in hand:
-            hand.remove(card)
-        hand.append(card)
+        if card not in hand:
+            hand.append(card)
 
 def select_cards():
     selected_cards = input(f"Please pick 5 of these cards: {hand} \n").replace(" ","").upper().split(",")
@@ -47,8 +49,8 @@ def select_cards():
 def discard():
     for card in selected_hand:
         deck.pop(card)
-        hand.remove(card)
-        selected_hand.remove(card)
+    hand.clear()
+    selected_hand.clear()
 
 def play():
     for card in selected_hand:
@@ -91,19 +93,29 @@ def count_ranks(played_hand):
     print(rank_counts)
     return rank_counts
 
-        
+def check_flush(rank_counts):
+    multiplier = 1
+    for count in rank_counts:
+        if count == 5:
+            multiplier = multipliers.flush
+    
+    return multiplier
 
-while True:
+while not played:
     draw_hand()
     select_cards()
     print(selected_hand)
     choice = input("Do you want to play or discard this deck? p/d \n").lower()
     if choice == "p":
         play()
+        played = True
     elif choice == "d":
         print(selected_hand)
         discard()
         print(selected_hand)
-    count_suits(played_hand)
-    count_ranks(played_hand)
-    print(count_value())
+count_suits(played_hand)
+count_ranks(played_hand)
+print(count_value())
+check_flush(rank_counts)
+final_value = value*multiplier
+print(final_value)
