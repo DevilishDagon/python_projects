@@ -9,7 +9,11 @@ hand = []
 selected_hand = []
 selected_cards = []
 played_hand = []
+value = 0
 multiplier = 1
+ranks = [
+    "1","2","3","4","5","6","7","8","9","10","A","K","Q","J"
+]
 
 A = 0
 K = 0
@@ -73,6 +77,22 @@ def count_suits(played_hand):
             C += 1
     print(H,D,S,C)
 
+def count_ranks(played_hand):
+    rank_counts = {
+        "A": 0, "K": 0, "Q": 0, "J": 0,
+        "10": 0, "9": 0, "8": 0, "7": 0, "6": 0,
+        "5": 0, "4": 0, "3": 0, "2": 0
+    }
+
+    for card in played_hand:
+        rank = card[1:]
+        if rank in rank_counts:
+            rank_counts[rank] += 1
+    print(rank_counts)
+    return rank_counts
+
+        
+
 while True:
     draw_hand()
     select_cards()
@@ -85,4 +105,5 @@ while True:
         discard()
         print(selected_hand)
     count_suits(played_hand)
+    count_ranks(played_hand)
     print(count_value())
