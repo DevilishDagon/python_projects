@@ -2,24 +2,49 @@ import phantom_poker_decks as decks
 import random
 
 deck = decks.standard_deck
-hand_size = 5
+hand_size = 8
 hand = []
+selected_hand = []
+played_hand = []
 
 def draw_hand():
-    for i in range (0,hand_size):
+    for i in range (len(hand),hand_size):
         card = random.choice(list(deck))
         hand.append(card)
 
+def select_cards():
+    selected_cards = input(f"Please pick 5 of these cards: {hand} \n")
+    selected = selected_cards.split(",")
+    if len(selected) > 5:
+        print("You can't pick more than 5 cards!")
+        select_cards()
+    for card in selected:
+        if card not in hand:
+            print(f"You do not have {card}!")
+        else:
+            selected_hand.append(card)
+
+def discard():
+    for card in selected_hand:
+        deck.pop(card)
+
+def play():
+    for card in selected_hand:
+        played_hand.append(card)
+            
 def count_value():
     value = 0
-    for card in hand:
+    for card in played_hand:
         value += (deck[card])
+        deck.pop(card)
     return value
 
-def select_cards():
-    selected_cards = input(f"Please pick 5 of these cards: {hand}")
-    
-
 draw_hand()
-print(hand)
+select_cards()
+print(selected_hand)
+choice = input("Do you want to play or discard this deck? p/d \n").lower()
+if choice == "p":
+    play()
+elif choice == "d":
+    discard()
 print(count_value())
