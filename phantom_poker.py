@@ -1,5 +1,6 @@
 import phantom_poker_decks as decks
 import random
+import phantom_poker_multipliers as multipliers
 
 deck = decks.standard_deck
 hand_size = 8
