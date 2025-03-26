@@ -17,6 +17,9 @@ rank_counts = {
         "10": 0, "9": 0, "8": 0, "7": 0, "6": 0,
         "5": 0, "4": 0, "3": 0, "2": 0
     }
+suit_counts = {
+    "H" : 0, "D" : 0, "S" : 0, "C" : 0
+}
 
 A = 0
 K = 0
@@ -49,7 +52,7 @@ def select_cards():
 def discard():
     for card in selected_hand:
         deck.pop(card)
-    hand.clear()
+        hand.remove(card)
     selected_hand.clear()
 
 def play():
@@ -64,20 +67,17 @@ def count_value():
     return value
 
 def count_suits(played_hand):
-    H = 0
-    D = 0
-    S = 0
-    C = 0
+    suit_counts = {
+        "H":0,"D":0,"S":0,"C":0
+    }
+
     for card in played_hand:
-        if card[0] == "H":
-            H += 1
-        if card[0] == "D":
-            D += 1
-        if card[0] == "S":
-            S += 1
-        if card[0] == "C":
-            C += 1
-    print(H,D,S,C)
+        suit = card[0]
+        print(suit)
+        suit_counts[suit] += 1
+        print(suit_counts)
+
+    return suit_counts
 
 def count_ranks(played_hand):
     rank_counts = {
@@ -93,16 +93,17 @@ def count_ranks(played_hand):
     print(rank_counts)
     return rank_counts
 
-def check_flush(rank_counts):
+def check_flush(suit_counts):
     multiplier = 1
-    for count in rank_counts:
-        if count == 5:
+    for suit in suit_counts:
+        if suit == 5:
             multiplier = multipliers.flush
     
     return multiplier
 
 while not played:
     draw_hand()
+    hand = ["HK", "HQ", "HJ", "HA", "H1"]
     select_cards()
     print(selected_hand)
     choice = input("Do you want to play or discard this deck? p/d \n").lower()
@@ -116,6 +117,7 @@ while not played:
 count_suits(played_hand)
 count_ranks(played_hand)
 print(count_value())
-check_flush(rank_counts)
+multiplier = check_flush(suit_counts)
+value = count_value()
 final_value = value*multiplier
 print(final_value)
