@@ -121,3 +121,4 @@ multiplier = check_flush(suit_counts)
 value = count_value()
 final_value = value*multiplier
 print(final_value)
+testest
