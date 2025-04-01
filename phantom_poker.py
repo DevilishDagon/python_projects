@@ -59,7 +59,7 @@ def play():
     for card in selected_hand:
         played_hand.append(card)
             
-def count_value():
+def count_value(played_hand):
     value = 0
     for card in played_hand:
         value += (deck[card])
@@ -73,11 +73,12 @@ def count_suits(played_hand):
 
     for card in played_hand:
         suit = card[0]
-        print(suit)
         suit_counts[suit] += 1
-        print(suit_counts)
-
+    
+    print(suit_counts)
     return suit_counts
+
+suit_counts = count_suits(played_hand)
 
 def count_ranks(played_hand):
     rank_counts = {
@@ -94,11 +95,51 @@ def count_ranks(played_hand):
     return rank_counts
 
 def check_flush(suit_counts):
+    suit_counts = count_suits(played_hand)
     multiplier = 1
     for suit in suit_counts:
         if suit == 5:
             multiplier = multipliers.flush
     
+    return multiplier
+
+def check_hand(played_hand):
+    multiplier = 1
+    ranks = count_ranks(played_hand)
+    suits = count_suits(played_hand)
+    
+    # Pair
+    if 2 in ranks.values():
+        multiplier = multipliers.pair
+    
+    # Two Pair
+    doubles = 0
+    for rank in ranks.values():
+        if rank == 2:
+            doubles += 1
+    if doubles == 2:
+        multiplier = multipliers.two_pair
+    
+    # Three of a kind
+    if 3 in ranks.values():
+        multiplier = multipliers.three_of_a_kind
+    
+    # Flush
+    if 5 in suits.values():
+        multiplier = multipliers.flush
+
+    # Four of a kind
+    if 4 in ranks.values():
+        multiplier = multipliers.four_of_a_kind
+
+    
+
+
+
+    #High card
+    else:
+        multiplier = multipliers.high_card
+
     return multiplier
 
 while not played:
@@ -114,11 +155,12 @@ while not played:
         print(selected_hand)
         discard()
         print(selected_hand)
-count_suits(played_hand)
-count_ranks(played_hand)
-print(count_value())
-multiplier = check_flush(suit_counts)
-value = count_value()
-final_value = value*multiplier
+
+value = int(count_value(played_hand))
+print(value)
+
+multiplier = int(check_hand(played_hand))
+print(multiplier)
+
+final_value = value * multiplier
 print(final_value)
-testest
